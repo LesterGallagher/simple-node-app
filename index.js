@@ -1,17 +1,18 @@
 const http = require('http');
+const fs = require('fs');
 const port = 3000;
+const routes = {
+    '/': fs.readFileSync('index.html').toString(),
+    '/user': fs.readFileSync('user.html').toString(),
+    '404': fs.readFileSync('404.html').toString(),
+}
 
 const requestHandler = (request, response) => {
-    switch(request.url) {
-        case '/':
-        response.end('Welcome to Home')
-        break;
-        case '/user':
-        response.end('Welcome to User Page');
-        break;
-        default:
+    if (request.url in routes) {
+        response.end(routes[request.url]);
+    } else {
         response.writeHead(404, 'Not Found');
-        break;
+        response.end(routes['404']);
     }
 };
 
