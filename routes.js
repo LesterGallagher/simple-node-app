@@ -1,21 +1,21 @@
 const fs = require('fs');
 
-const routes = {
-    '/': fs.readFileSync('index.html').toString(),
-    '/user': fs.readFileSync('user.html').toString(),
-    '404': fs.readFileSync('404.html').toString(),
+const renderTemplate = (html, request, locals = {}) => {
+    return html.replace(/{{(.*?)}}/g, (substring, js) => eval(js));
 };
 
+const routes = {};
+
 // Home page handler
-const indexHTML = fs.readFileSync('index.html');
+const indexHTML = fs.readFileSync('index.html').toString();
 routes['/'] = routes['/index'] = routes['/index.html'] = (request, response) => {
     response.end(indexHTML);
 }
 
 // User page handler
-const userHTML = fs.readFileSync('user.html');
+const userHTMLTemplate = fs.readFileSync('user.html').toString();
 routes['/user'] = routes['/user.html'] = (request, response) => {
-    response.end(userHTML);
+    response.end(renderTemplate(userHTMLTemplate, request));
 }
 
 // 404 handler
